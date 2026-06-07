@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · DSA Compass{% endblock %}
+{% block content %}
+<section class="hero-panel mb-4">
+    <div>
+        <span class="eyebrow">JAVA DSA ROADMAP</span>
+        <h1>Good to see you, Pradeep.</h1>
+        <p>{{ quote }}</p>
+    </div>
+    <div class="hero-progress">
+        <div class="progress-ring" style="--progress: {{ overall_progress * 3.6 }}deg">
+            <div><strong>{{ overall_progress }}%</strong><span>complete</span></div>
+        </div>
+    </div>
+</section>
+
+<section class="row g-3 mb-4">
+    <div class="col-6 col-xl-3">
+        <div class="metric-card">
+            <span class="metric-label">Topics completed</span>
+            <strong>{{ completed_topics }}<small>/{{ total_topics }}</small></strong>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="metric-card">
+            <span class="metric-label">In progress</span>
+            <strong>{{ in_progress_topics }}</strong>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="metric-card">
+            <span class="metric-label">Current streak</span>
+            <strong>{{ current_streak }}<small> days</small></strong>
+        </div>
+    </div>
+    <div class="col-6 col-xl-3">
+        <div class="metric-card">
+            <span class="metric-label">Revisions due</span>
+            <strong>{{ pending_revisions|length }}</strong>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="content-card h-100">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">ROADMAP</span>
+                    <h2>Section progress</h2>
+                </div>
+                <a href="{{ url_for('main.curriculum') }}" class="text-link">View curriculum →</a>
+            </div>
+            <div class="section-list">
+                {% for section in sections %}
+                    <a class="section-progress-row" href="{{ url_for('main.curriculum', section=section.id) }}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span>{{ section.name }}</span>
+                            <small>{{ section.completed_count }}/{{ section.topics|length }}</small>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ section.progress }}%"></div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="content-card mb-4">
+            <span class="eyebrow">TODAY</span>
+            <h2>Your focus</h2>
+            {% if today_focus %}
+                <p class="focus-title">{{ today_focus.topic.title }}</p>
+                <span class="status-pill status-{{ today_focus.topic.status }}">{{ today_focus.topic.status_label }}</span>
+                <form action="{{ url_for('main.mark_focus_studied', entry_id=today_focus.id) }}" method="post" class="mt-3">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button class="btn {{ 'btn-outline-success' if today_focus.studied else 'btn-primary' }} w-100">
+                        {{ 'Studied today ✓' if today_focus.studied else 'Mark study session complete' }}
+                    </button>
+                </form>
+            {% else %}
+                <p class="text-secondary">Choose one topic to give your attention to today.</p>
+                <a href="{{ url_for('main.focus') }}" class="btn btn-primary w-100">Choose today’s focus</a>
+            {% endif %}
+        </section>
+        <section class="content-card">
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">REVISION</span>
+                    <h2>Due now</h2>
+                </div>
+                <a href="{{ url_for('main.revisions') }}" class="text-link">Manage →</a>
+            </div>
+            {% if pending_revisions %}
+                {% for revision in pending_revisions[:3] %}
+                    <div class="compact-row">
+                        <div>
+                            <strong>{{ revision.topic.title }}</strong>
+                            <small>Due {{ revision.scheduled_for.strftime('%d %b %Y') }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-secondary mb-0">No revisions are due. Your queue is clear.</p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Today’s Focus · DSA Compass{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <span class="eyebrow">{{ today.strftime('%A, %d %B')|upper }}</span>
+        <h1>Today’s focus</h1>
+        <p>Choose one topic. There is no deadline, only a clear next step.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <section class="content-card">
+            {% if focus_entry %}
+                <span class="eyebrow">SELECTED TOPIC</span>
+                <h2 class="focus-large">{{ focus_entry.topic.title }}</h2>
+                <p class="text-secondary">From {{ focus_entry.topic.section.name }}</p>
+                <form action="{{ url_for('main.mark_focus_studied', entry_id=focus_entry.id) }}" method="post">
+                    <button class="btn {{ 'btn-outline-success' if focus_entry.studied else 'btn-primary' }} btn-lg w-100">
+                        {{ 'Session recorded ✓' if focus_entry.studied else 'I studied this today' }}
+                    </button>
+                </form>
+                <hr>
+                <p class="small text-secondary">You can change today’s topic below. Changing it resets today’s study check.</p>
+            {% else %}
+                <span class="eyebrow">START HERE</span>
+                <h2>Pick a topic for today</h2>
+                <p class="text-secondary">A focused choice makes it easier to begin.</p>
+            {% endif %}
+
+            <form action="{{ url_for('main.focus') }}" method="post" class="mt-4">
+                <label for="topic_id" class="form-label">Topic</label>
+                <select id="topic_id" name="topic_id" class="form-select form-select-lg" required>
+                    <option value="">Select a topic</option>
+                    {% for topic in topics %}
+                        <option value="{{ topic.id }}" {{ 'selected' if focus_entry and focus_entry.topic_id == topic.id }}>
+                            {{ topic.section.name }} — {{ topic.title }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-dark mt-3">{{ 'Change focus' if focus_entry else 'Set today’s focus' }}</button>
+            </form>
+        </section>
+    </div>
+    <div class="col-lg-5">
+        <section class="content-card">
+            <span class="eyebrow">RECENT ACTIVITY</span>
+            <h2>Study history</h2>
+            {% if recent_entries %}
+                {% for entry in recent_entries %}
+                    <div class="history-row">
+                        <span class="history-check {{ 'done' if entry.studied }}">{{ '✓' if entry.studied else '–' }}</span>
+                        <div>
+                            <strong>{{ entry.topic.title }}</strong>
+                            <small>{{ entry.focus_date.strftime('%d %b %Y') }}</small>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-secondary mb-0">Your study history will appear here.</p>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
+

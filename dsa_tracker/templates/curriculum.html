@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Curriculum · DSA Compass{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <span class="eyebrow">COMPLETE ROADMAP</span>
+        <h1>Java DSA curriculum</h1>
+        <p>Move each topic forward as your understanding develops.</p>
+    </div>
+</div>
+
+<div class="accordion curriculum-accordion" id="curriculumAccordion">
+    {% for section in sections %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button {{ '' if active_section == section.id or loop.first else 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#section-{{ section.id }}">
+                    <div class="w-100 pe-3">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ section.name }}</strong>
+                            <span class="section-count">{{ section.completed_count }}/{{ section.topics|length }}</span>
+                        </div>
+                        <div class="progress mt-2">
+                            <div class="progress-bar" style="width: {{ section.progress }}%"></div>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div id="section-{{ section.id }}" class="accordion-collapse collapse {{ 'show' if active_section == section.id or loop.first }}" data-bs-parent="#curriculumAccordion">
+                <div class="accordion-body">
+                    <p class="section-description">{{ section.description }}</p>
+                    {% for topic in section.topics %}
+                        <div class="topic-row">
+                            <div class="topic-index">{{ loop.index }}</div>
+                            <div class="topic-info">
+                                <strong>{{ topic.title }}</strong>
+                                <span class="status-pill status-{{ topic.status }}">{{ topic.status_label }}</span>
+                            </div>
+                            <form action="{{ url_for('main.update_topic_status', topic_id=topic.id) }}" method="post">
+                                <input type="hidden" name="next" value="{{ url_for('main.curriculum', section=section.id) }}">
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" aria-label="Update status for {{ topic.title }}">
+                                    <option value="not_started" {{ 'selected' if topic.status == 'not_started' }}>Not started</option>
+                                    <option value="in_progress" {{ 'selected' if topic.status == 'in_progress' }}>In progress</option>
+                                    <option value="completed" {{ 'selected' if topic.status == 'completed' }}>Completed</option>
+                                </select>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+

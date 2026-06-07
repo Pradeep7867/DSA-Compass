@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Revisions · DSA Compass{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <span class="eyebrow">RETAIN WHAT YOU LEARN</span>
+        <h1>Revision queue</h1>
+        <p>Schedule completed topics when you decide they need another pass.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <section class="content-card">
+            <h2>Schedule revision</h2>
+            {% if completed_topics %}
+                <form action="{{ url_for('main.revisions') }}" method="post" class="mt-4">
+                    <label for="topic_id" class="form-label">Completed topic</label>
+                    <select id="topic_id" name="topic_id" class="form-select" required>
+                        <option value="">Select a topic</option>
+                        {% for topic in completed_topics %}
+                            <option value="{{ topic.id }}">{{ topic.section.name }} — {{ topic.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="scheduled_for" class="form-label mt-3">Revision date</label>
+                    <input id="scheduled_for" name="scheduled_for" type="date" class="form-control" value="{{ today.isoformat() }}" required>
+                    <button class="btn btn-primary mt-3 w-100">Add to revision queue</button>
+                </form>
+            {% else %}
+                <div class="empty-state">
+                    <p>Complete your first topic before scheduling a revision.</p>
+                    <a href="{{ url_for('main.curriculum') }}" class="btn btn-outline-dark">Open curriculum</a>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+    <div class="col-lg-7">
+        <section class="content-card">
+            <h2>Scheduled revisions</h2>
+            {% if revision_items %}
+                <div class="revision-list mt-3">
+                    {% for revision in revision_items %}
+                        <div class="revision-row {{ 'revision-complete' if revision.completed }}">
+                            <form action="{{ url_for('main.complete_revision', revision_id=revision.id) }}" method="post">
+                                <button class="check-button" aria-label="Toggle revision completion">{{ '✓' if revision.completed else '' }}</button>
+                            </form>
+                            <div class="flex-grow-1">
+                                <strong>{{ revision.topic.title }}</strong>
+                                <small>
+                                    {{ 'Completed' if revision.completed else ('Due' if revision.scheduled_for <= today else 'Scheduled') }}
+                                    · {{ revision.scheduled_for.strftime('%d %b %Y') }}
+                                </small>
+                            </div>
+                            <form action="{{ url_for('main.delete_revision', revision_id=revision.id) }}" method="post">
+                                <button class="btn btn-sm btn-link text-danger text-decoration-none">Remove</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <p>No revisions scheduled yet.</p>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
+
