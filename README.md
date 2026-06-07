@@ -21,6 +21,7 @@ curriculum is seeded once.
 
 The application is ready for a Python web host such as Render.
 
+- Python runtime: `3.12` (declared in `.python-version`)
 - Build command: `pip install -r requirements.txt`
 - Start command: `gunicorn run:app`
 - Required environment variable: `SECRET_KEY`
