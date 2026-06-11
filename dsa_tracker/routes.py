@@ -4,6 +4,20 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from sqlalchemy import func
 
 from .models import FocusEntry, Revision, Section, Topic, db
+from .models import (
+    FocusEntry,
+    Revision,
+    Section,
+    Topic,
+    User,
+    db,
+)
+from flask_login import (
+    login_user,
+    logout_user,
+    login_required,
+    current_user,
+)
 
 
 main = Blueprint("main", __name__)
@@ -14,8 +28,140 @@ VALID_STATUSES = {"not_started", "in_progress", "completed"}
 def inject_globals():
     return {"today": date.today()}
 
+@main.route("/signup", methods=["GET", "POST"])
+def signup():
+
+    if request.method == "POST":
+
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip().lower()
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        career_goal = request.form.get("career_goal")
+        terms = request.form.get("terms")
+
+
+        # Name Validation
+        if len(name) < 3:
+            flash(
+                "Name must be at least 3 characters long.",
+                "danger"
+            )
+            return redirect(url_for("main.signup"))
+
+        # Password Match Validation
+        if password != confirm_password:
+            flash(
+                "Passwords do not match.",
+                "danger"
+            )
+            return redirect(url_for("main.signup"))
+
+        # Password Length Validation
+        if len(password) < 8:
+            flash(
+                "Password must be at least 8 characters long.",
+                "danger"
+            )
+            return redirect(url_for("main.signup"))
+
+        # Terms Validation
+        if not terms:
+            flash(
+                "Please accept Terms & Conditions.",
+                "danger"
+            )
+            return redirect(url_for("main.signup"))
+
+        existing_user = User.query.filter_by(
+            email=email
+        ).first()
+
+        if existing_user:
+            flash(
+                "Email already registered.",
+                "danger"
+            )
+            return redirect(url_for("main.signup"))
+
+        user = User(
+            name=name,
+            email=email,
+            career_goal=career_goal
+        )
+
+        user.set_password(password)
+
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+
+        flash(
+            "Account created successfully.",
+            "success"
+        )
+
+        return redirect(url_for("main.dashboard"))
+
+    return render_template("signup.html")
+#login Route---------
+@main.route("/login", methods=["GET", "POST"])
+def login():
+
+    if current_user.is_authenticated:
+        return redirect(
+            url_for("main.dashboard")
+        )
+
+    if request.method == "POST":
+
+        email = request.form.get(
+            "email"
+        ).strip().lower()
+
+        password = request.form.get(
+            "password"
+        )
+
+        remember = bool(
+            request.form.get("remember")
+        )
+
+        user = User.query.filter_by(
+            email=email
+        ).first()
+
+        if not user or not user.check_password(password):
+
+            flash(
+                "Invalid email or password.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("main.login")
+            )
+
+        login_user(
+            user,
+            remember=remember
+        )
+
+        flash(
+            f"Welcome back, {user.name}!",
+            "success"
+        )
+
+        return redirect(
+            url_for("main.dashboard")
+        )
+
+    return render_template(
+        "login.html"
+    )
 
 @main.get("/")
+@login_required
 def dashboard():
     topics = Topic.query.all()
     total_topics = len(topics)
@@ -57,7 +203,9 @@ def dashboard():
     )
 
 
+
 @main.get("/curriculum")
+@login_required
 def curriculum():
     sections = Section.query.order_by(Section.position).all()
     active_section = request.args.get("section", type=int)
@@ -67,6 +215,7 @@ def curriculum():
 
 
 @main.post("/topics/<int:topic_id>/status")
+@login_required
 def update_topic_status(topic_id):
     topic = db.get_or_404(Topic, topic_id)
     status = request.form.get("status")
@@ -89,6 +238,7 @@ def update_topic_status(topic_id):
 
 
 @main.route("/focus", methods=["GET", "POST"])
+@login_required
 def focus():
     focus_entry = FocusEntry.query.filter_by(focus_date=date.today()).first()
     if request.method == "POST":
@@ -125,6 +275,7 @@ def focus():
 
 
 @main.post("/focus/<int:entry_id>/studied")
+@login_required
 def mark_focus_studied(entry_id):
     entry = db.get_or_404(FocusEntry, entry_id)
     entry.studied = not entry.studied
@@ -135,6 +286,7 @@ def mark_focus_studied(entry_id):
 
 
 @main.route("/revisions", methods=["GET", "POST"])
+@login_required
 def revisions():
     if request.method == "POST":
         topic_id = request.form.get("topic_id", type=int)
@@ -168,6 +320,7 @@ def revisions():
 
 
 @main.post("/revisions/<int:revision_id>/complete")
+@login_required
 def complete_revision(revision_id):
     revision = db.get_or_404(Revision, revision_id)
     revision.completed = not revision.completed
@@ -178,6 +331,7 @@ def complete_revision(revision_id):
 
 
 @main.post("/revisions/<int:revision_id>/delete")
+@login_required
 def delete_revision(revision_id):
     revision = db.get_or_404(Revision, revision_id)
     db.session.delete(revision)
@@ -211,3 +365,18 @@ def get_quote(seed):
         "Small, completed sessions create serious momentum.",
     ]
     return quotes[seed % len(quotes)]
+
+@main.get("/logout")
+@login_required
+def logout():
+
+    logout_user()
+
+    flash(
+        "Logged out successfully.",
+        "info"
+    )
+
+    return redirect(
+        url_for("main.login")
+    )

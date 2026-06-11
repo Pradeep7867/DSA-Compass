@@ -1,0 +1,323 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sign Up | DSA Compass</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Hanken Grotesk & Geist -->
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700;800&amp;family=Geist:wght@400;600&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#0053db",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "secondary": "#4b41e1",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#2563eb",
+                    "secondary-container": "#645efb",
+                    "on-surface": "#0b1c30",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary": "#ffffff",
+                    "outline": "#737686",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed-variant": "#3323cc",
+                    "on-tertiary-container": "#ffede6",
+                    "inverse-on-surface": "#eaf1ff",
+                    "error": "#ba1a1a",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed-variant": "#7d2d00",
+                    "tertiary-container": "#bc4800",
+                    "surface-variant": "#d3e4fe",
+                    "surface-bright": "#f8f9ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "secondary-fixed": "#e2dfff",
+                    "tertiary-fixed": "#ffdbcd",
+                    "on-background": "#0b1c30",
+                    "surface-container-high": "#dce9ff",
+                    "inverse-surface": "#213145",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "primary": "#004ac6",
+                    "on-error": "#ffffff",
+                    "on-primary-fixed": "#00174b",
+                    "background": "#f8f9ff",
+                    "surface": "#f8f9ff",
+                    "on-secondary-container": "#fffbff",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-low": "#eff4ff",
+                    "surface-container": "#e5eeff",
+                    "surface-dim": "#cbdbf5",
+                    "primary-fixed": "#dbe1ff",
+                    "on-secondary-fixed": "#0f0069",
+                    "tertiary": "#943700"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1rem",
+                    "2xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "section-margin": "40px",
+                    "container-padding": "24px",
+                    "card-gap": "16px",
+                    "gutter": "20px"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "title-md": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "label-sm": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .input-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+            border-color: #2563eb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-on-surface dark:bg-on-background shadow-md sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-container-padding py-4 max-w-[1280px] mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-white text-headline-lg" data-icon="explore">explore</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-white">DSA Compass</h1>
+</div>
+
+<a class="font-label-sm text-label-sm text-white border-b-2 border-primary-fixed-dim pb-1 transition-all active:scale-95 duration-100" href="{{ url_for('main.login') }}" >Sign In</a>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-[1280px] mx-auto px-4 py-8 md:py-12">
+<div class="flex flex-col lg:grid lg:grid-cols-12 gap-8 items-start">
+<!-- Hero/Visual Section (Bento Style for Mobile) -->
+<section class="col-span-12 lg:col-span-5 order-2 lg:order-1 flex flex-col gap-6">
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1E293B] to-[#334155] p-8 shadow-xl text-white">
+<div class="relative z-10">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary-fixed-dim opacity-80">Precision Path</span>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg mt-2 mb-4">Master Data Structures Pattern by Pattern.</h2>
+<p class="font-body-md text-body-md text-surface-variant/80 leading-relaxed">Join a community of focused developers using structural visualization to conquer complex algorithms.</p>
+</div>
+<!-- Decorative Graphic -->
+<div class="absolute -right-16 -bottom-16 w-64 h-64 opacity-20 pointer-events-none">
+<div class="w-full h-full border-[12px] border-white/20 rounded-full flex items-center justify-center">
+<div class="w-3/4 h-3/4 border-[8px] border-white/20 rounded-full"></div>
+</div>
+</div>
+<div class="mt-8 flex items-center gap-4">
+<div class="flex -space-x-2">
+<div class="w-10 h-10 rounded-full border-2 border-on-surface bg-primary-container flex items-center justify-center text-xs font-bold">JD</div>
+<div class="w-10 h-10 rounded-full border-2 border-on-surface bg-secondary flex items-center justify-center text-xs font-bold">AK</div>
+<div class="w-10 h-10 rounded-full border-2 border-on-surface bg-tertiary flex items-center justify-center text-xs font-bold">LS</div>
+</div>
+<p class="font-label-sm text-label-sm">Join 12k+ other learners</p>
+</div>
+</div>
+<!-- Benefits Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+<div class="bg-primary-container/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary-container" data-icon="query_stats">query_stats</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Track Progress</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Visual roadmap of your DSA journey.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+<div class="bg-secondary-container/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-secondary" data-icon="route">route</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Personalized Path</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Adaptive learning for your pace.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+<div class="bg-tertiary-fixed/30 p-2 rounded-lg">
+<span class="material-symbols-outlined text-tertiary" data-icon="code">code</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Practice Dashboard</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Clean, monospaced coding environment.</p>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant/30 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+<div class="bg-primary-fixed/30 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary" data-icon="verified">verified</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface mb-1">Interview Ready</h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Score-based readiness indicators.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Registration Form Section -->
+<section class="col-span-12 lg:col-span-7 order-1 lg:order-2">
+<div class="bg-white rounded-2xl p-8 md:p-12 shadow-xl border border-outline-variant/20">
+<div class="mb-8">
+<h3 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Start your journey</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Enter your details to create your personalized DSA account.</p>
+</div>
+     <!-- Flash Messages Start -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+
+            <div class="
+               flash-message
+                mb-4
+                p-4
+                rounded-lg
+                {% if category == 'success' %}
+                    bg-green-100 text-green-700
+                {% elif category == 'danger' %}
+                    bg-red-100 text-red-700
+                {% else %}
+                    bg-blue-100 text-blue-700
+                {% endif %}
+            ">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+    {% endwith %}
+    <!-- Flash Messages End -->
+<form  method="POST"
+    action="{{ url_for('main.signup') }}" class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Full Name -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="fullname">FULL NAME</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md text-body-md input-focus-ring transition-all" id="fullname" placeholder="Pradeep Kumar" name="name" type="text" required>
+</div>
+<!-- Email -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="email">EMAIL ADDRESS</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md text-body-md input-focus-ring transition-all" id="email" placeholder="pradeep@example.com" required="" type="email" name="email">
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Password -->
+<div class="flex flex-col gap-2 relative">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="password">PASSWORD</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md text-body-md input-focus-ring transition-all" id="password" placeholder="••••••••" required="" type="password" name="password">
+<button class="absolute right-4 top-10 text-outline hover:text-on-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="visibility">visibility</span>
+</button>
+</div>
+<!-- Confirm Password -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="confirm_password">CONFIRM PASSWORD</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md text-body-md input-focus-ring transition-all" id="confirm_password"  name="confirm_password" placeholder="••••••••" required="" type="password">
+</div>
+</div>
+<!-- Career Goal Dropdown -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="career_goal">CAREER GOAL</label>
+<div class="relative">
+<select class="w-full appearance-none px-4 py-3 rounded-lg border border-outline-variant bg-surface-container-lowest font-body-md text-body-md input-focus-ring transition-all cursor-pointer" id="career_goal"   name="career_goal">
+<option disabled="" selected="" value="">Select your current profile</option>
+<option value="student">Student</option>
+<option value="fresher">Fresher</option>
+<option value="experienced">Experienced Developer</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-outline" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Terms & Conditions -->
+<div class="flex items-center gap-3 py-2">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 transition-all cursor-pointer" id="terms" type="checkbox" name="terms">
+<label class="font-label-sm text-label-sm text-on-surface-variant leading-tight" for="terms">
+                                I agree to the <a class="text-primary hover:underline" href="#">Terms &amp; Conditions</a> and <a class="text-primary hover:underline" href="#">Privacy Policy</a>.
+                            </label>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-4 mt-4">
+<button class="w-full py-4 bg-primary-container text-on-primary font-title-md text-title-md rounded-xl shadow-lg hover:bg-primary transition-all active:scale-[0.98] duration-100 flex items-center justify-center gap-2" type="submit">
+                                Create Account
+                                <span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<div class="flex items-center gap-4 my-2">
+<div class="flex-grow h-px bg-outline-variant/50"></div>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-widest">or</span>
+<div class="flex-grow h-px bg-outline-variant/50"></div>
+</div>
+<button class="w-full py-4 bg-white border border-outline-variant text-on-surface font-title-md text-title-md rounded-xl shadow-sm hover:bg-surface-container transition-all flex items-center justify-center gap-3" type="button">
+<img alt="Google Logo" class="w-6 h-6" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA2X1eGMuVKXn4q_bPQG87_tf7ZLyjLT8PTiKkZmC-Mq9Cse09dBUEoyvTUkVlsicIoKuBU78CimyWj50oIrspvU4AUrQVFntVM1iRkH5n3x8pbqxJC9YGUVLX_-1tq8K5F4s70iv-SX1kHgLwFcsVlvVwJZrQ7HlUgxZlcGC7QaMwZdAPG8RB_LkWvuZnoM_drzLcaeafBuSdXsktWoQ9xQ4Po_X4KLhLKq9THV2OUiCPd0ZHS3syIUQuQP09PZ3ODCdGGjvS7XWsF">
+                                Continue with Google
+                            </button>
+</div>
+<!-- Login Link -->
+<div class="text-center mt-6">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                                Already have an account?
+                                <a class="text-primary font-bold hover:underline ml-1" href="{{ url_for('main.login') }}">Sign In</a>
+</p>
+</div>
+</form>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-bright dark:bg-surface-dim border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-container-padding py-8 max-w-[1280px] mx-auto gap-4">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-title-md text-title-md text-primary font-bold mb-1">DSA Compass</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2026 DSA Compass. Built for focused Java DSA practice.</p>
+</div>
+<div class="flex gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+<script src="{{ url_for('static', filename='js/signup.js') }}"></script>
+
+
+</body></html>

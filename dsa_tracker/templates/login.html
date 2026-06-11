@@ -1,0 +1,382 @@
+<!DOCTYPE html><html class="light" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Sign In | DSA Compass</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Geist:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Hanken+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#e2dfff",
+                        "outline": "#737686",
+                        "surface-container-low": "#eff4ff",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#ffede6",
+                        "surface-container-high": "#dce9ff",
+                        "on-background": "#0b1c30",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "surface-bright": "#f8f9ff",
+                        "primary": "#004ac6",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "surface-container": "#e5eeff",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "on-error-container": "#93000a",
+                        "secondary": "#4b41e1",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary": "#943700",
+                        "inverse-primary": "#b4c5ff",
+                        "on-primary-fixed": "#00174b",
+                        "surface": "#f8f9ff",
+                        "secondary-container": "#645efb",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-surface": "#0b1c30",
+                        "surface-tint": "#0053db",
+                        "on-surface-variant": "#434655",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "tertiary-container": "#bc4800",
+                        "surface-dim": "#cbdbf5",
+                        "background": "#f8f9ff",
+                        "surface-variant": "#d3e4fe",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-secondary-fixed": "#0f0069",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-primary-container": "#eeefff",
+                        "on-secondary-container": "#fffbff",
+                        "surface-container-highest": "#d3e4fe",
+                        "primary-container": "#2563eb",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "inverse-surface": "#213145",
+                        "outline-variant": "#c3c6d7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "card-gap": "16px",
+                        "section-margin": "40px",
+                        "base": "8px",
+                        "gutter": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Hanken Grotesk"],
+                        "title-md": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-sm": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-inky {
+            background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col font-body-md overflow-x-hidden">
+<!-- Subtle Full Screen Background Shader -->
+<!-- STITCH_SHADER_START:ANIMATION_5 class="fixed inset-0 w-full h-full pointer-events-none opacity-30" -->
+<div class="fixed inset-0 w-full h-full pointer-events-none opacity-30" style="display:block;">
+<canvas id="shader-canvas-ANIMATION_5" style="display:block;width:100%;height:100%" width="1280" height="1135"></canvas>
+<script>
+(function() {
+  const canvas = document.getElementById('shader-canvas-ANIMATION_5');
+
+  // Sync the WebGL drawing-buffer size with the CSS-driven layout size.
+  // This fires on initial layout and whenever the element is resized.
+  function syncSize() {
+    const w = canvas.clientWidth  || 1280;
+    const h = canvas.clientHeight || 720;
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width  = w;
+      canvas.height = h;
+    }
+  }
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(syncSize).observe(canvas);
+  }
+  syncSize();
+
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if (!gl) return;
+  const vs = `attribute vec2 a_position;
+varying vec2 v_texCoord;
+void main() {
+  v_texCoord = a_position * 0.5 + 0.5;
+  gl_Position = vec4(a_position, 0.0, 1.0);
+}`;
+  const fs = `precision highp float;
+varying vec2 v_texCoord;
+uniform float u_time;
+uniform vec2 u_resolution;
+
+float line(vec2 p, vec2 a, vec2 b, float width) {
+    vec2 pa = p - a, ba = b - a;
+    float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    return smoothstep(width, 0.0, length(pa - ba * h));
+}
+
+float hash(vec2 p) {
+    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+}
+
+void main() {
+    vec2 uv = v_texCoord;
+    vec2 p = (v_texCoord - 0.5) * u_resolution / min(u_resolution.x, u_resolution.y);
+
+    vec3 col = vec3(0.015, 0.04, 0.1); // Deep blue background
+
+    // Grid/Nodes pattern
+    vec2 gv = fract(p * 5.0) - 0.5;
+    vec2 id = floor(p * 5.0);
+
+    float m = 0.0;
+    for(int y=-1; y<=1; y++) {
+        for(int x=-1; x<=1; x++) {
+            vec2 offs = vec2(float(x), float(y));
+            float n = hash(id + offs);
+            vec2 p_node = offs + sin(n * 6.28 + u_time * 0.5) * 0.3;
+            float d = length(gv - p_node);
+            m += smoothstep(0.05, 0.04, d) * n;
+
+            // Connect to neighbors
+            if(n > 0.5) {
+                for(int y2=-1; y2<=1; y2++) {
+                    for(int x2=-1; x2<=1; x2++) {
+                        if(x2 == 0 && y2 == 0) continue;
+                        vec2 offs2 = vec2(float(x2), float(y2));
+                        float n2 = hash(id + offs2);
+                        if(n2 > 0.5) {
+                            vec2 p_node2 = offs2 + sin(n2 * 6.28 + u_time * 0.5) * 0.3;
+                            m += line(gv, p_node, p_node2, 0.005) * 0.2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    col += m * vec3(0.145, 0.388, 0.922); // Primary blue nodes/lines
+
+    // Subtle coding pulse
+    float pulse = sin(u_time * 0.5) * 0.5 + 0.5;
+    col += pulse * 0.02 * vec3(0.06, 0.725, 0.506); // Accent green pulse
+
+    gl_FragColor = vec4(col, 1.0);
+}`;
+  function cs(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    return s;
+  }
+  const prog = gl.createProgram();
+  gl.attachShader(prog, cs(gl.VERTEX_SHADER, vs));
+  gl.attachShader(prog, cs(gl.FRAGMENT_SHADER, fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'a_position');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const uTime = gl.getUniformLocation(prog, 'u_time');
+  const uRes = gl.getUniformLocation(prog, 'u_resolution');
+  const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+  // u_mouse is in pixel coordinates matching u_resolution (ShaderToy convention).
+  // Shaders that need normalized coords should use: u_mouse / u_resolution.
+  let mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+  window.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width && rect.height) {
+      const nx = (event.clientX - rect.left) / rect.width;
+      const ny = 1.0 - (event.clientY - rect.top) / rect.height;
+      mouse.x = nx * canvas.width;
+      mouse.y = ny * canvas.height;
+    }
+  });
+
+  function render(t) {
+    if (typeof ResizeObserver === 'undefined') syncSize();
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    if (uTime) gl.uniform1f(uTime, t * 0.001);
+    if (uRes) gl.uniform2f(uRes, canvas.width, canvas.height);
+    if (uMouse) gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    requestAnimationFrame(render);
+  }
+  render(0);
+})();
+</script>
+</div>
+<!-- STITCH_SHADER_END:ANIMATION_5 -->
+<main class="flex-grow flex flex-col md:flex-row relative z-10">
+<!-- Left/Top Section: Branding & Visuals -->
+<section class="w-full md:w-1/2 bg-inky text-on-primary flex flex-col items-center justify-center p-8 md:p-16 relative overflow-hidden min-h-[40vh] md:min-h-screen">
+<!-- Decorative Elements -->
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+<div class="absolute top-10 left-10 w-32 h-32 border-2 border-primary-fixed rounded-xl rotate-12"></div>
+<div class="absolute bottom-20 right-10 w-48 h-48 border border-secondary-fixed rounded-full"></div>
+</div>
+<div class="relative z-20 text-center md:text-left max-w-md">
+<div class="flex items-center justify-center md:justify-start gap-3 mb-6">
+<span class="material-symbols-outlined text-primary-fixed text-4xl" data-icon="terminal">terminal</span>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg tracking-tight text-white">DSA Compass</h1>
+</div>
+<h2 class="font-display-lg text-display-lg text-white mb-4 leading-tight">Navigate Your DSA Journey</h2>
+<p class="text-secondary-fixed font-body-lg mb-10 opacity-90">Master complex algorithms and data structures with a guided, precision-engineered path for modern developers.</p>
+<!-- Illustration Representation -->
+<div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl border border-white/10 group">
+<img alt="Coding Challenges Representation" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A cinematic, high-detail macro shot of a sleek computer monitor displaying complex glowing blue binary trees and dynamic data structure visualizations. The surrounding environment is a modern, dimly lit developer workspace with soft ambient blue neon lighting, creating an atmosphere of focused intelligence and technical precision. The visual style is clean, corporate-modern, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhm8FnoCBuhUlc3vOV5Cg7h4aWQt6LIf7khqT2EW35sX905dB_RXVV0pRCZRXPuK1AbHE0KmjeUvn5j31QvzJX14yrWGQV0yFAJ9v5T2mfejd20XPLubhetIsgNUT4Sh7aIF5wBptmdsa-3yG6FXWW_fowkEcQMMS5TTj79AEH7gJpJWBPTB0lUmBQmSB0ZifAQE67-eschc16X6S7cUcv15NZQbVhcxgQols3Fze3t5jZNsg3o-kHI1Tzg4CFXPrpynbg6X0-J-sy">
+<div class="absolute inset-0 bg-gradient-to-t from-[#1E293B] to-transparent opacity-60"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="flex gap-2">
+
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right/Bottom Section: Sign In Form -->
+<section class="w-full md:w-1/2 flex items-center justify-center p-6 md:p-12">
+<div class="w-full max-w-md glass-card rounded-xl p-8 animate-in fade-in slide-in-from-bottom-4 duration-1000 opacity-100">
+<div class="mb-8">
+<h3 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background mb-2">Welcome Back</h3>
+<p class="text-on-surface-variant font-body-md">Please enter your details to sign in.</p>
+</div>
+
+    <!-- Flash Messages Start -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+
+            <div class="
+                flash-message
+                mb-4
+                p-4
+                rounded-lg
+                {% if category == 'success' %}
+                    bg-green-100 text-green-700
+                {% elif category == 'danger' %}
+                    bg-red-100 text-red-700
+                {% else %}
+                    bg-blue-100 text-blue-700
+                {% endif %}
+            ">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+    {% endwith %}
+    <!-- Flash Messages End -->
+<form method="POST" action="{{ url_for('main.login') }}" class="space-y-5" >
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase" for="email">Email Address</label>
+<div class="relative">
+<input  class="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-body-md text-on-background" id="email" name="email" placeholder="dev@dsacompass.com" type="email" required>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase" for="password">Password</label>
+<div class="relative">
+<input class="w-full px-4 py-3 bg-white border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all font-body-md text-on-background" id="password" name="password" placeholder="••••••••" type="password">
+<button class="absolute right-3 top-3.5 text-outline hover:text-primary transition-colors" onclick="togglePassword()" type="button">
+<span class="material-symbols-outlined text-sm" data-icon="visibility" id="pass-toggle-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Options Row -->
+<div class="flex items-center justify-between text-label-sm">
+<label class="flex items-center gap-2 cursor-pointer group">
+<input class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" name="checkbox" type="checkbox">
+<span class="text-on-surface-variant group-hover:text-primary transition-colors font-label-sm">Remember Me</span>
+</label>
+<a class="text-primary hover:underline font-label-sm transition-all" href="#">Forgot Password?</a>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-white font-title-md py-4 rounded-lg hover:bg-primary-container active:scale-[0.98] transition-all shadow-md" type="submit">
+                        Sign In
+                    </button>
+<!-- Divider -->
+<div class="relative flex items-center py-4">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-4 text-on-surface-variant font-label-sm uppercase">Or continue with</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<!-- Social Login -->
+<button class="w-full bg-white border border-outline-variant text-on-surface font-title-md py-3 rounded-lg flex items-center justify-center gap-3 hover:bg-surface-container-low active:scale-[0.98] transition-all" type="button">
+<svg class="w-5 h-5" viewBox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                        Google
+                    </button>
+</form>
+<div class="mt-8 text-center">
+<p class="text-on-surface-variant font-body-md">
+                        New to the path?
+                        <a class="text-primary font-bold hover:underline ml-1" href="{{ url_for('main.signup') }}">Create Account</a>
+</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 relative z-10 border-t border-outline-variant bg-surface/50 backdrop-blur-sm">
+<div class="max-w-[1280px] mx-auto px-container-padding flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="text-primary font-title-md">DSA Compass</div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Help Center</a>
+</div>
+<div class="text-on-surface-variant font-label-sm">© 2026 DSA Compass. All rights reserved.</div>
+</div>
+</footer>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+</body></html>
