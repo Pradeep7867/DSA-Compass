@@ -27,6 +27,7 @@
                     <a class="nav-link {{ 'active' if request.endpoint == 'main.curriculum' }}" href="{{ url_for('main.curriculum') }}">Curriculum</a>
                     <a class="nav-link {{ 'active' if request.endpoint == 'main.focus' }}" href="{{ url_for('main.focus') }}">Today’s Focus</a>
                     <a class="nav-link {{ 'active' if request.endpoint == 'main.revisions' }}" href="{{ url_for('main.revisions') }}">Revisions</a>
+                    <a class="nav-link {{ 'active' if request.endpoint == 'main.revisions' }}" href="{{ url_for('main.logout') }}">logout</a>
                 </div>
             </div>
         </div>
@@ -35,7 +36,7 @@
     <main class="container py-4 py-lg-5">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm auto-dismiss-alert" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -44,10 +45,32 @@
         {% block content %}{% endblock %}
     </main>
 
+
     <footer class="container pb-4 text-center text-secondary small">
         Built for focused Java DSA practice.
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+setTimeout(function () {
+
+    document
+        .querySelectorAll(".auto-dismiss-alert")
+        .forEach(function(alertElement) {
+
+            const alert =
+                bootstrap.Alert.getOrCreateInstance(
+                    alertElement
+                );
+
+            alert.close();
+
+        });
+
+}, 3000);
+
+</script>
+
 </body>
 </html>
 

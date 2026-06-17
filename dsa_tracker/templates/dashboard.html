@@ -56,10 +56,10 @@
                     <a class="section-progress-row" href="{{ url_for('main.curriculum', section=section.id) }}">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <span>{{ section.name }}</span>
-                            <small>{{ section.completed_count }}/{{ section.topics|length }}</small>
+                            <small>{{ section_stats[section.id].completed }}/{{ section.topics|length }}</small>
                         </div>
                         <div class="progress">
-                            <div class="progress-bar" style="width: {{ section.progress }}%"></div>
+                            <div class="progress-bar" style="width: {{ section_stats[section.id].progress }}%"></div>
                         </div>
                     </a>
                 {% endfor %}
@@ -87,8 +87,8 @@
         <section class="content-card">
             <div class="section-heading">
                 <div>
-                    <span class="eyebrow">REVISION</span>
                     <h2>Due now</h2>
+                    <span class="eyebrow">REVISION</span>
                 </div>
                 <a href="{{ url_for('main.revisions') }}" class="text-link">Manage →</a>
             </div>

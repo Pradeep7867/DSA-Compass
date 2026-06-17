@@ -2,8 +2,7 @@ from datetime import UTC, date, datetime
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from sqlalchemy import func
-
-from .models import FocusEntry, Revision, Section, Topic, db
+from .models import FocusEntry, Revision, Section, Topic, UserTopicProgress ,db
 from .models import (
     FocusEntry,
     Revision,
@@ -93,6 +92,20 @@ def signup():
         user.set_password(password)
 
         db.session.add(user)
+        topics = Topic.query.all()
+        progress_items = []
+
+        for topic in topics:
+            progress_items.append(
+                UserTopicProgress(
+                    user_id=user.id,
+                    topic_id=topic.id,
+                    status="not_started"
+                )
+            )
+
+        db.session.add_all(progress_items)
+        db.session.commit()
         db.session.commit()
         login_user(user)
 
@@ -163,35 +176,114 @@ def login():
 @main.get("/")
 @login_required
 def dashboard():
-    topics = Topic.query.all()
-    total_topics = len(topics)
-    completed_topics = sum(topic.status == "completed" for topic in topics)
-    in_progress_topics = sum(topic.status == "in_progress" for topic in topics)
-    overall_progress = (
-        round((completed_topics / total_topics) * 100) if total_topics else 0
+
+    progress_items = UserTopicProgress.query.filter_by(
+        user_id=current_user.id
+    ).all()
+    total_topics = Topic.query.count()
+
+    completed_topics = sum(
+        item.status == "completed"
+        for item in progress_items
     )
-    today_focus = FocusEntry.query.filter_by(focus_date=date.today()).first()
+
+    in_progress_topics = sum(
+        item.status == "in_progress"
+        for item in progress_items
+    )
+
+    overall_progress = (
+        round(
+            (completed_topics / total_topics) * 100
+        )
+        if total_topics
+        else 0
+    )
+
+    today_focus = FocusEntry.query.filter_by(
+        user_id=current_user.id,
+        focus_date=date.today()
+    ).first()
+
     pending_revisions = (
         Revision.query.filter(
-            Revision.completed.is_(False), Revision.scheduled_for <= date.today()
+            Revision.user_id == current_user.id,
+            Revision.completed.is_(False),
+            Revision.scheduled_for <= date.today()
         )
         .order_by(Revision.scheduled_for)
         .all()
     )
-    sections = Section.query.order_by(Section.position).all()
+
+    sections = Section.query.order_by(
+        Section.position
+    ).all()
+
+    progress_map = {
+        item.topic_id: item
+        for item in progress_items
+    }
+
+    section_stats = {}
+
+    for section in sections:
+
+        completed_count = 0
+
+        for topic in section.topics:
+
+            progress = progress_map.get(topic.id)
+
+            if (
+                    progress
+                    and progress.status == "completed"
+            ):
+                completed_count += 1
+
+        total_topics_in_section = len(
+            section.topics
+        )
+
+        progress_percentage = (
+            round(
+                (
+                        completed_count
+                        / total_topics_in_section
+                ) * 100
+            )
+            if total_topics_in_section
+            else 0
+        )
+
+        section_stats[section.id] = {
+            "completed": completed_count,
+            "progress": progress_percentage
+        }
 
     studied_dates = {
         row[0]
-        for row in db.session.query(FocusEntry.focus_date)
-        .filter(FocusEntry.studied.is_(True))
+        for row in db.session.query(
+            FocusEntry.focus_date
+        )
+        .filter(
+            FocusEntry.user_id == current_user.id,
+            FocusEntry.studied.is_(True)
+        )
         .all()
     }
-    current_streak = calculate_streak(studied_dates)
-    quote = get_quote(date.today().toordinal())
+
+    current_streak = calculate_streak(
+        studied_dates
+    )
+
+    quote = get_quote(
+        date.today().toordinal()
+    )
 
     return render_template(
         "dashboard.html",
         sections=sections,
+        section_stats=section_stats,
         total_topics=total_topics,
         completed_topics=completed_topics,
         in_progress_topics=in_progress_topics,
@@ -203,44 +295,132 @@ def dashboard():
     )
 
 
-
 @main.get("/curriculum")
 @login_required
 def curriculum():
-    sections = Section.query.order_by(Section.position).all()
-    active_section = request.args.get("section", type=int)
+
+    sections = Section.query.order_by(
+        Section.position
+    ).all()
+
+    active_section = request.args.get(
+        "section",
+        type=int
+    )
+
+    progress_items = UserTopicProgress.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    progress_map = {
+        item.topic_id: item
+        for item in progress_items
+    }
+    section_stats = {}
+
+    for section in sections:
+
+        completed = 0
+
+        for topic in section.topics:
+
+            progress = progress_map.get(topic.id)
+
+            if (
+                    progress
+                    and progress.status == "completed"
+            ):
+                completed += 1
+
+        total = len(section.topics)
+
+        progress_percentage = (
+            round((completed / total) * 100)
+            if total
+            else 0
+        )
+
+        section_stats[section.id] = {
+            "completed": completed,
+            "progress": progress_percentage
+        }
+
     return render_template(
-        "curriculum.html", sections=sections, active_section=active_section
+        "curriculum.html",
+        sections=sections,
+        active_section=active_section,
+        progress_map=progress_map,
+        section_stats = section_stats
     )
 
 
 @main.post("/topics/<int:topic_id>/status")
 @login_required
 def update_topic_status(topic_id):
-    topic = db.get_or_404(Topic, topic_id)
-    status = request.form.get("status")
-    if status not in VALID_STATUSES:
-        flash("That topic status is not valid.", "danger")
-        return redirect_back("main.curriculum")
 
-    topic.status = status
+    status = request.form.get("status")
+
+    if status not in VALID_STATUSES:
+        flash(
+            "That topic status is not valid.",
+            "danger"
+        )
+        return redirect_back(
+            "main.curriculum"
+        )
+
+    progress = UserTopicProgress.query.filter_by(
+        user_id=current_user.id,
+        topic_id=topic_id
+    ).first()
+
+    if not progress:
+        flash(
+            "Progress record not found.",
+            "danger"
+        )
+        return redirect_back(
+            "main.curriculum"
+        )
+
+    progress.status = status
+
     now = datetime.now(UTC)
-    if status == "in_progress" and not topic.started_at:
-        topic.started_at = now
+
+    if (
+        status == "in_progress"
+        and not progress.started_at
+    ):
+        progress.started_at = now
+
     if status == "completed":
-        topic.started_at = topic.started_at or now
-        topic.completed_at = now
+        progress.started_at = (
+            progress.started_at or now
+        )
+        progress.completed_at = now
+
     else:
-        topic.completed_at = None
+        progress.completed_at = None
+
     db.session.commit()
-    flash(f'"{topic.title}" is now {topic.status_label}.', "success")
-    return redirect_back("main.curriculum")
+
+    flash(
+        "Topic status updated.",
+        "success"
+    )
+
+    return redirect_back(
+        "main.curriculum"
+    )
 
 
 @main.route("/focus", methods=["GET", "POST"])
 @login_required
 def focus():
-    focus_entry = FocusEntry.query.filter_by(focus_date=date.today()).first()
+    focus_entry = FocusEntry.query.filter_by(
+        user_id=current_user.id,
+        focus_date=date.today()
+    ).first()
     if request.method == "POST":
         topic_id = request.form.get("topic_id", type=int)
         topic = db.get_or_404(Topic, topic_id)
@@ -248,23 +428,53 @@ def focus():
             focus_entry.topic_id = topic.id
             focus_entry.studied = False
         else:
-            focus_entry = FocusEntry(focus_date=date.today(), topic_id=topic.id)
+            focus_entry = FocusEntry(
+                user_id=current_user.id,
+                focus_date=date.today(),
+                topic_id=topic.id
+            )
             db.session.add(focus_entry)
-        if topic.status == "not_started":
-            topic.status = "in_progress"
-            topic.started_at = datetime.now(UTC)
+        progress = UserTopicProgress.query.filter_by(
+            user_id=current_user.id,
+            topic_id=topic.id
+        ).first()
+        if (
+                progress
+                and progress.status == "not_started"
+        ):
+            progress.status = "in_progress"
+            progress.started_at = datetime.now(UTC)
         db.session.commit()
         flash(f'Today’s focus is "{topic.title}".', "success")
         return redirect(url_for("main.focus"))
 
     topics = (
-        Topic.query.filter(Topic.status != "completed")
+        db.session.query(Topic)
+        .join(
+            UserTopicProgress,
+            Topic.id == UserTopicProgress.topic_id
+        )
+        .filter(
+            UserTopicProgress.user_id == current_user.id,
+            UserTopicProgress.status != "completed"
+        )
         .join(Section)
-        .order_by(Section.position, Topic.position)
+        .order_by(
+            Section.position,
+            Topic.position
+        )
         .all()
     )
+
     recent_entries = (
-        FocusEntry.query.order_by(FocusEntry.focus_date.desc()).limit(14).all()
+        FocusEntry.query.filter_by(
+            user_id=current_user.id
+        )
+        .order_by(
+            FocusEntry.focus_date.desc()
+        )
+        .limit(14)
+        .all()
     )
     return render_template(
         "focus.html",
@@ -273,17 +483,33 @@ def focus():
         recent_entries=recent_entries,
     )
 
-
 @main.post("/focus/<int:entry_id>/studied")
 @login_required
 def mark_focus_studied(entry_id):
-    entry = db.get_or_404(FocusEntry, entry_id)
-    entry.studied = not entry.studied
-    db.session.commit()
-    message = "Study session recorded." if entry.studied else "Study record removed."
-    flash(message, "success")
-    return redirect_back("main.focus")
 
+    entry = FocusEntry.query.filter_by(
+        id=entry_id,
+        user_id=current_user.id
+    ).first_or_404()
+
+    entry.studied = not entry.studied
+
+    db.session.commit()
+
+    message = (
+        "Study session recorded."
+        if entry.studied
+        else "Study record removed."
+    )
+
+    flash(
+        message,
+        "success"
+    )
+
+    return redirect_back(
+        "main.focus"
+    )
 
 @main.route("/revisions", methods=["GET", "POST"])
 @login_required
@@ -298,20 +524,38 @@ def revisions():
             flash("Choose a valid revision date.", "danger")
             return redirect(url_for("main.revisions"))
 
-        db.session.add(Revision(topic_id=topic.id, scheduled_for=revision_date))
+        db.session.add(Revision(  user_id=current_user.id,topic_id=topic.id, scheduled_for=revision_date))
         db.session.commit()
         flash(f'Revision scheduled for "{topic.title}".', "success")
         return redirect(url_for("main.revisions"))
 
     completed_topics = (
-        Topic.query.filter_by(status="completed")
+        db.session.query(Topic)
+        .join(
+            UserTopicProgress,
+            Topic.id == UserTopicProgress.topic_id
+        )
+        .filter(
+            UserTopicProgress.user_id == current_user.id,
+            UserTopicProgress.status == "completed"
+        )
         .join(Section)
-        .order_by(Section.position, Topic.position)
+        .order_by(
+            Section.position,
+            Topic.position
+        )
         .all()
     )
-    revision_items = Revision.query.order_by(
-        Revision.completed, Revision.scheduled_for
-    ).all()
+    revision_items = (
+        Revision.query.filter_by(
+            user_id=current_user.id
+        )
+        .order_by(
+            Revision.completed,
+            Revision.scheduled_for
+        )
+        .all()
+    )
     return render_template(
         "revisions.html",
         completed_topics=completed_topics,
@@ -322,7 +566,10 @@ def revisions():
 @main.post("/revisions/<int:revision_id>/complete")
 @login_required
 def complete_revision(revision_id):
-    revision = db.get_or_404(Revision, revision_id)
+    revision = Revision.query.filter_by(
+        id=revision_id,
+        user_id=current_user.id
+    ).first_or_404()
     revision.completed = not revision.completed
     revision.completed_at = datetime.now(UTC) if revision.completed else None
     db.session.commit()
@@ -333,7 +580,10 @@ def complete_revision(revision_id):
 @main.post("/revisions/<int:revision_id>/delete")
 @login_required
 def delete_revision(revision_id):
-    revision = db.get_or_404(Revision, revision_id)
+    revision = Revision.query.filter_by(
+        id=revision_id,
+        user_id=current_user.id
+    ).first_or_404()
     db.session.delete(revision)
     db.session.commit()
     flash("Revision removed.", "success")
@@ -380,3 +630,9 @@ def logout():
     return redirect(
         url_for("main.login")
     )
+@main.get("/debug-progress")
+def debug_progress():
+
+    count = UserTopicProgress.query.count()
+
+    return f"Progress Rows: {count}"

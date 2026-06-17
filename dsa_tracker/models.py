@@ -36,11 +36,8 @@ class Section(db.Model):
 class Topic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(180), unique=True, nullable=False)
-    status = db.Column(db.String(20), nullable=False, default="not_started")
     position = db.Column(db.Integer, nullable=False)
     section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
-    started_at = db.Column(db.DateTime)
-    completed_at = db.Column(db.DateTime)
     focus_entries = db.relationship(
         "FocusEntry", backref="topic", lazy=True, cascade="all, delete-orphan"
     )
@@ -48,23 +45,36 @@ class Topic(db.Model):
         "Revision", backref="topic", lazy=True, cascade="all, delete-orphan"
     )
 
-    @property
-    def status_label(self):
-        return self.status.replace("_", " ").title()
 
 
 class FocusEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
     focus_date = db.Column(db.Date, nullable=False, default=date.today, index=True)
     studied = db.Column(db.Boolean, nullable=False, default=False)
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=utc_now)
 
-    __table_args__ = (db.UniqueConstraint("focus_date", name="one_focus_per_day"),)
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "focus_date",
+            name="one_focus_per_user_per_day"
+        ),
+    )
 
 
 class Revision(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
     scheduled_for = db.Column(db.Date, nullable=False, index=True)
     completed = db.Column(db.Boolean, nullable=False, default=False)
     topic_id = db.Column(db.Integer, db.ForeignKey("topic.id"), nullable=False)
@@ -99,6 +109,25 @@ class User(UserMixin, db.Model):
         db.DateTime(timezone=True),
         default=utc_now
     )
+    focus_entries = db.relationship(
+        "FocusEntry",
+        backref="user",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+
+    revisions = db.relationship(
+        "Revision",
+        backref="user",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
+    topic_progress = db.relationship(
+        "UserTopicProgress",
+        backref="user",
+        lazy=True,
+        cascade="all, delete-orphan"
+    )
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -108,3 +137,50 @@ class User(UserMixin, db.Model):
             self.password_hash,
             password
         )
+
+
+class UserTopicProgress(db.Model):
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    topic_id = db.Column(
+        db.Integer,
+        db.ForeignKey("topic.id"),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(20),
+        nullable=False,
+        default="not_started"
+    )
+
+    started_at = db.Column(
+        db.DateTime
+    )
+
+    completed_at = db.Column(
+        db.DateTime
+    )
+
+
+    topic = db.relationship(
+        "Topic"
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            "user_id",
+            "topic_id",
+            name="unique_user_topic"
+        ),
+    )

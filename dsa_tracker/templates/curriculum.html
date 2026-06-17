@@ -13,34 +13,45 @@
     {% for section in sections %}
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button {{ '' if active_section == section.id or loop.first else 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#section-{{ section.id }}">
+                <button class="accordion-button {{ '' if (active_section and active_section == section.id) or loop.first else 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#section-{{ section.id }}">
                     <div class="w-100 pe-3">
                         <div class="d-flex justify-content-between">
                             <strong>{{ section.name }}</strong>
-                            <span class="section-count">{{ section.completed_count }}/{{ section.topics|length }}</span>
+                            <span class="section-count">{{ section_stats[section.id].completed }}/{{ section.topics|length }}</span>
                         </div>
                         <div class="progress mt-2">
-                            <div class="progress-bar" style="width: {{ section.progress }}%"></div>
+                            <div class="progress-bar" style="width: {{ section_stats[section.id].progress }}%"></div>
                         </div>
                     </div>
                 </button>
             </h2>
-            <div id="section-{{ section.id }}" class="accordion-collapse collapse {{ 'show' if active_section == section.id or loop.first }}" data-bs-parent="#curriculumAccordion">
+            <div id="section-{{ section.id }}" class="accordion-collapse collapse {{ 'show' if (active_section and active_section == section.id) or loop.first }}" data-bs-parent="#curriculumAccordion">
                 <div class="accordion-body">
                     <p class="section-description">{{ section.description }}</p>
+
                     {% for topic in section.topics %}
+                        {% set progress = progress_map.get(topic.id) %}
+                        {# Default to 'not_started' if progress doesn't exist yet #}
+                        {% set current_status = progress.status if progress else 'not_started' %}
+
                         <div class="topic-row">
                             <div class="topic-index">{{ loop.index }}</div>
                             <div class="topic-info">
                                 <strong>{{ topic.title }}</strong>
-                                <span class="status-pill status-{{ topic.status }}">{{ topic.status_label }}</span>
+                                <span class="status-pill status-{{ current_status }}">{{ current_status.replace('_', ' ').title() }}</span>
                             </div>
                             <form action="{{ url_for('main.update_topic_status', topic_id=topic.id) }}" method="post">
                                 <input type="hidden" name="next" value="{{ url_for('main.curriculum', section=section.id) }}">
-                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" aria-label="Update status for {{ topic.title }}">
-                                    <option value="not_started" {{ 'selected' if topic.status == 'not_started' }}>Not started</option>
-                                    <option value="in_progress" {{ 'selected' if topic.status == 'in_progress' }}>In progress</option>
-                                    <option value="completed" {{ 'selected' if topic.status == 'completed' }}>Completed</option>
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="not_started" {% if current_status == 'not_started' %}selected{% endif %}>
+                                        Not started
+                                    </option>
+                                    <option value="in_progress" {% if current_status == 'in_progress' %}selected{% endif %}>
+                                        In progress
+                                    </option>
+                                    <option value="completed" {% if current_status == 'completed' %}selected{% endif %}>
+                                        Completed
+                                    </option>
                                 </select>
                             </form>
                         </div>
@@ -51,4 +62,3 @@
     {% endfor %}
 </div>
 {% endblock %}
-
