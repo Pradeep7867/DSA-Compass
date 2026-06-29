@@ -1,0 +1,112 @@
+<section class="consistency-card">
+
+    <!-- Top Header -->
+    <div class="consistency-header">
+
+        <div class="streak-section">
+
+            <h2>
+                🔥 {{ current_streak }} Day Streak
+            </h2>
+
+            <p>
+                Keep your learning momentum alive
+            </p>
+
+        </div>
+
+        <div class="timer-section">
+
+            ⏰ {{ hours_left_today }} Hours Left
+
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- Calendar Header -->
+
+    <div class="calendar-header">
+
+        <div>
+
+            <h3>
+                Consistency Calendar
+            </h3>
+
+            <p>
+                Track your daily learning habit
+            </p>
+
+        </div>
+
+        <div class="calendar-legend">
+
+            <div class="legend-item">
+
+                <span class="legend-box none"></span>
+
+                None
+
+            </div>
+
+            <div class="legend-item">
+
+                <span class="legend-box studied"></span>
+
+                Studied
+
+            </div>
+
+            <div class="legend-item">
+
+                <span class="legend-box focus"></span>
+
+                Focus
+
+            </div>
+
+            <div class="legend-item">
+
+                <span class="legend-box revision"></span>
+
+                Revision
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Month Labels -->
+
+    <div
+        id="heatmap-months"
+        class="heatmap-months">
+
+    </div>
+
+    <!-- Calendar -->
+
+    <div class="heatmap-wrapper">
+
+        <div class="day-labels">
+    <span>Mon</span>
+    <span>Tue</span>
+    <span>Wed</span>
+    <span>Thu</span>
+    <span>Fri</span>
+    <span>Sat</span>
+    <span>Sun</span>
+</div>
+
+        <div
+            id="consistency-heatmap"
+            class="heatmap-grid">
+
+        </div>
+
+    </div>
+
+</section>

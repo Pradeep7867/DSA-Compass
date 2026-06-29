@@ -35,7 +35,7 @@ class Section(db.Model):
 
 class Topic(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(180), unique=True, nullable=False)
+    title = db.Column(db.String(180), nullable=False)
     position = db.Column(db.Integer, nullable=False)
     section_id = db.Column(db.Integer, db.ForeignKey("section.id"), nullable=False)
     focus_entries = db.relationship(

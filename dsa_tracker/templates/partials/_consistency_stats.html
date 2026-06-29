@@ -1,0 +1,154 @@
+<section class="consistency-stats">
+
+    <div class="stats-grid">
+
+       <div class="stat-card">
+
+    <div class="stat-title">
+        CONSISTENCY SCORE
+    </div>
+
+    <div class="score-content">
+
+        <div class="score-ring">
+
+            <svg viewBox="0 0 120 120">
+
+                <circle
+                    class="ring-bg"
+                    cx="60"
+                    cy="60"
+                    r="50">
+                </circle>
+
+                <circle
+                    class="ring-progress"
+                    cx="60"
+                    cy="60"
+                    r="50"
+                    style="--progress: {{ consistency_score }}">
+                </circle>
+
+            </svg>
+
+            <div class="score-value">
+
+                {{ consistency_score }}%
+
+            </div>
+
+        </div>
+
+        <div class="score-info">
+
+            <strong>Goal: 80%</strong>
+
+            <span>KEEP PUSHING!</span>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <div class="stat-card">
+
+    <div class="stat-title">
+        DAYS STUDIED
+    </div>
+
+    <div class="days-number">
+
+        {{ days_studied_this_month }}
+
+        <span>/ {{ days_in_current_month }} Days</span>
+
+    </div>
+
+    <div class="progress mt-4">
+
+        <div class="progress-bar"
+
+             style="width: {{ (days_studied_this_month / days_in_current_month * 100)|round }}%">
+
+        </div>
+
+    </div>
+
+</div>
+
+       <div class="stat-card stat-card-danger">
+
+    <div class="stat-title">
+        DAYS MISSED
+    </div>
+
+    <div class="d-flex align-items-center gap-3 mt-4">
+
+        <div class="icon-box danger">
+
+            📅
+
+        </div>
+
+        <div>
+
+            <div class="days-number">
+
+                {{ days_missed_this_month }}
+
+                <span>Days Missed</span>
+
+            </div>
+
+            <small class="text-danger fw-semibold">
+
+                Critical Limit: 7
+
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <div class="stat-card">
+
+    <div class="stat-title">
+        LONGEST STREAK
+    </div>
+
+    <div class="d-flex align-items-center gap-3 mt-4">
+
+        <div class="icon-box">
+
+            🏆
+
+        </div>
+
+        <div>
+
+            <div class="days-number">
+
+                {{ longest_streak }}
+
+                <span>Days</span>
+
+            </div>
+
+            <small class="text-secondary">
+
+                Personal Best
+
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+
+</section>

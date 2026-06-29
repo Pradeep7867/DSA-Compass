@@ -1,0 +1,520 @@
+/* ═══════════════════════════════════════════════════
+   Consistency Calendar
+   ═══════════════════════════════════════════════════ */
+
+.consistency-card {
+    background: white;
+    border-radius: 18px;
+    padding: 32px;
+    border: 1px solid #E5E7EB;
+    overflow-x: auto;
+}
+
+/* ── Header ─────────────────────────────────────── */
+.consistency-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.streak-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.streak-section p {
+    color: #64748b;
+    margin-top: 4px;
+    margin-bottom: 0;
+}
+
+.timer-section {
+    color: #dc2626;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* ── Calendar Header ────────────────────────────── */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 25px;
+    margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.calendar-header p {
+    color: #64748b;
+    margin: 0;
+}
+
+/* ── Legend ─────────────────────────────────────── */
+.calendar-legend {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #374151;
+}
+
+.legend-box {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.legend-box.none     { background: #E5E7EB; }
+.legend-box.studied  { background: #93C5FD; }
+.legend-box.focus    { background: #2563EB; }
+.legend-box.revision { background: #10B981; }
+
+/* ── Month Labels ───────────────────────────────── */
+.heatmap-months {
+    display: flex;
+    margin-left: 44px;   /* aligns with grid, not day-labels */
+    margin-bottom: 6px;
+}
+
+.heatmap-months span {
+    width: 27px;         /* cell(22px) + gap(5px) */
+    min-width: 27px;
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+}
+
+/* ── Wrapper ────────────────────────────────────── */
+.heatmap-wrapper {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+/* ── Day Labels ─────────────────────────────────── */
+.day-labels {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;            /* matches .week-column gap */
+    font-size: 11px;
+    color: #64748b;
+    paddinclsg-top: 1px;
+    flex-shrink: 0;
+}
+
+.day-labels span {
+    height: 22px;        /* matches cell height */
+    line-height: 22px;
+    display: block;
+}
+
+/* ── Grid ───────────────────────────────────────── */
+.heatmap-grid {
+    display: flex;
+    gap: 5px;
+}
+
+.week-column {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* ── Cells ──────────────────────────────────────── */
+.heatmap-cell {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: #E5E7EB;
+    transition: transform .15s;
+    cursor: default;
+}
+
+.heatmap-cell:hover    { transform: scale(1.25); }
+.heatmap-cell.studied  { background: #93C5FD; }
+.heatmap-cell.focus    { background: #2563EB; }
+.heatmap-cell.revision { background: #10B981; }
+
+
+/*-----------Cards------------------------------------*/
+.consistency-stats{
+    margin-top:32px;
+}
+
+.stats-grid{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(4,1fr);
+
+    gap:24px;
+
+}
+
+.stat-card{
+
+    background:#fff;
+
+    border:1px solid #E7EAF3;
+
+    border-radius:18px;
+
+    min-height:160px;
+
+    padding:24px;
+
+}
+
+/*-------------Card1 --------------*/
+.stat-title{
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#6B7280;
+
+    letter-spacing:.08em;
+
+    margin-bottom:28px;
+
+}
+
+.score-content{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap : 20px;
+
+}
+
+.score-ring{
+
+    position:relative;
+
+    width:90px;
+
+    height:90px;
+
+}
+
+.score-ring svg{
+
+    width:90px;
+
+    height:90px;
+
+    transform:rotate(-90deg);
+
+}
+
+.ring-bg{
+
+    fill:none;
+
+    stroke:#E5E7EB;
+
+    stroke-width:10;
+
+}
+
+.ring-progress{
+
+    fill:none;
+
+    stroke:#3157E6;
+
+    stroke-width:10;
+
+    stroke-linecap:round;
+
+    stroke-dasharray:314;
+
+    stroke-dashoffset:calc(
+        314 - (314 * var(--progress) / 100)
+    );
+
+}
+
+.score-value{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:700;
+
+    font-size:22px;
+
+    color:#0F172A;
+
+}
+
+.score-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+}
+
+.score-info strong{
+
+    font-size:15px;
+
+}
+
+.score-info span{
+
+    margin-top:6px;
+
+    color:#3157E6;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+/* ------------------- Card 2 ----------------*/
+.days-number{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+.days-number span{
+
+    font-size:18px;
+
+    color:#6B7280;
+
+}
+
+.progress{
+
+    height:10px;
+
+    border-radius:999px;
+
+    background:#E5E7EB;
+
+}
+
+.progress-bar{
+
+    border-radius:999px;
+
+    background:#3157E6;
+
+}
+
+/*--------------- Card 3 ---------------*/
+.stat-card-danger{
+
+    border:2px solid #F5C2C7;
+
+}
+
+.icon-box{
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:22px;
+
+}
+
+.icon-box.danger{
+
+    background:#FEF2F2;
+
+}
+
+/*--------------- Card 4 ---------------*/
+.progress{
+
+    height:12px;
+
+    border-radius:999px;
+
+}
+
+
+@media (max-width:768px){
+
+.stats-grid{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+    }
+
+  .consistency-card{
+
+    padding:20px;
+
+}
+    .consistency-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:12px;
+
+    }
+    .calendar-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:16px;
+
+    }
+     .heatmap-wrapper{
+
+            overflow-x:auto;
+
+            overflow-y:hidden;
+
+            -webkit-overflow-scrolling:touch;
+
+    }
+     .stat-card{
+
+        padding:18px;
+
+    }
+    .score-ring{
+
+        width:70px;
+
+        height:70px;
+
+    }
+
+    .score-ring svg{
+
+        width:70px;
+
+        height:70px;
+
+    }
+    .display-number{
+
+        font-size:32px;
+
+    }
+
+    .heatmap-grid{
+
+    min-width:780px;
+
+}
+.calendar-legend{
+
+    flex-wrap:wrap;
+
+    row-gap:8px;
+
+}
+.timer-section{
+
+    font-size:13px;
+
+}
+footer{
+
+    background:transparent;
+
+    padding:24px 0;
+
+}
+
+}
+@media (max-width:576px){
+
+    .stats-grid{
+
+        grid-template-columns:1fr;
+
+    }
+     .navbar-brand{
+
+        font-size:1.5rem;
+
+    }
+
+    .navbar-toggler{
+
+        padding:.45rem .6rem;
+
+    }
+    .hero-panel h1{
+
+        font-size:2.3rem;
+
+        line-height:1.15;
+
+    }
+    .day-labels{
+
+        width:26px;
+
+        font-size:11px;
+
+    }
+    .calendar-legend{
+
+        gap:10px;
+
+        font-size:10px;
+
+    }
+
+}

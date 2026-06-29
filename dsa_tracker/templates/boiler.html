@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Consistency Calendar | DSA Compass</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Geist:wght@400;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Hanken+Grotesk:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#fffbff",
+                        "primary-container": "#2563eb",
+                        "on-tertiary-fixed-variant": "#7d2d00",
+                        "surface-variant": "#d3e4fe",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#dce9ff",
+                        "outline": "#737686",
+                        "outline-variant": "#c3c6d7",
+                        "primary-fixed": "#dbe1ff",
+                        "on-primary-fixed": "#00174b",
+                        "background": "#f8f9ff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3323cc",
+                        "secondary-fixed": "#e2dfff",
+                        "inverse-surface": "#213145",
+                        "secondary-fixed-dim": "#c3c0ff",
+                        "surface-container-low": "#eff4ff",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#b4c5ff",
+                        "surface-tint": "#0053db",
+                        "surface-container": "#e5eeff",
+                        "on-tertiary-fixed": "#360f00",
+                        "on-secondary-fixed": "#0f0069",
+                        "secondary-container": "#645efb",
+                        "on-surface-variant": "#434655",
+                        "on-tertiary-container": "#ffede6",
+                        "tertiary-fixed": "#ffdbcd",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb596",
+                        "surface-dim": "#cbdbf5",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#eeefff",
+                        "secondary": "#4b41e1",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-background": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "tertiary": "#943700",
+                        "surface-bright": "#f8f9ff",
+                        "surface": "#f8f9ff",
+                        "primary": "#004ac6",
+                        "tertiary-container": "#bc4800",
+                        "on-error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-padding": "24px",
+                        "card-gap": "16px",
+                        "gutter": "20px",
+                        "section-margin": "40px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "title-md": ["Hanken Grotesk"],
+                        "label-sm": ["Geist"],
+                        "display-lg": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "title-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; -webkit-font-smoothing: antialiased; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .contribution-grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 4px; }
+        .grid-square { width: 12px; height: 12px; border-radius: 2px; }
+        .square-none { background-color: #E2E8F0; } /* Light Gray */
+        .square-studied { background-color: #93C5FD; } /* Light Blue */
+        .square-focus { background-color: #1D4ED8; } /* Dark Blue */
+        .square-revision { background-color: #10B981; } /* Green */
+        @media (max-width: 640px) { .grid-square { width: 10px; height: 10px; } }
+    </style>
+</head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- Top Navigation Anchor -->
+<nav class="bg-on-surface dark:bg-on-background shadow-md sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-container-padding py-4 max-w-[1280px] mx-auto">
+<div class="font-headline-lg text-headline-lg font-bold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-fixed-dim">explore</span>
+                DSA Compass
+            </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-sm text-label-sm text-white border-b-2 border-primary-fixed-dim pb-1" href="#">Dashboard</a>
+<a class="font-label-sm text-label-sm text-surface-variant/80 hover:text-white transition-colors" href="#">Curriculum</a>
+<a class="font-label-sm text-label-sm text-surface-variant/80 hover:text-white transition-colors" href="#">Problems</a>
+</div>
+<div class="flex items-center gap-4 mr-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+<div class="flex flex-col leading-none">
+<div class="flex items-baseline gap-1">
+<span class="font-bold text-white text-body-md">15</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2 text-surface-variant/80">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</div>
+</div><button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-lg font-label-sm text-label-sm hover:opacity-90 transition-all active:scale-95 duration-100">
+                Sign In
+            </button>
+</div>
+</nav>
+<main class="flex-grow max-w-[1280px] mx-auto w-full px-container-padding py-section-margin">
+<!-- Hero Section -->
+<header class="mb-10">
+<div class="flex items-center gap-2 text-on-surface-variant mb-2">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary">Student Portal</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-label-sm text-label-sm text-outline">Analytics</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">My Learning Progress</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Consistency is the bridge between goals and accomplishment. Monitor your daily coding habits and track your algorithmic mastery.</p>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- THE MAIN TASK: Consistency Calendar Card -->
+<div class="lg:col-span-12 bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-[#F1F5F9] overflow-hidden">
+<!-- Streak Banner -->
+
+
+<div class="p-6">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Consistency Calendar</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Track your daily learning habit</p>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[10px] uppercase">
+<span class="grid-square square-none"></span> None
+                </div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[10px] uppercase">
+<span class="grid-square square-studied"></span> Studied
+                </div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[10px] uppercase">
+<span class="grid-square square-focus"></span> Focus Met
+                </div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-[10px] uppercase">
+<span class="grid-square square-revision"></span> Revision
+                </div>
+</div>
+</div>
+<!-- Heatmap Grid -->
+<div class="overflow-x-auto pb-4 scrollbar-hide">
+<div class="flex gap-4 min-w-[600px]">
+<!-- Week Labels -->
+<div class="flex flex-col justify-between py-1 text-on-surface-variant font-label-sm text-[10px] leading-none uppercase pr-2">
+<span>Mon</span>
+<span>Wed</span>
+<span>Fri</span>
+<span>Sun</span>
+</div>
+<!-- The Grid -->
+<div class="flex-grow">
+<div class="flex justify-between mb-2 text-on-surface-variant font-label-sm text-[10px] uppercase">
+<span>Sep</span>
+<span>Oct</span>
+<span>Nov</span>
+<span>Dec</span>
+</div>
+<div class="contribution-grid" id="heatmap-container">
+<!-- Grid generated by JS -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Metrics Panel -->
+<div class="lg:col-span-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mt-4">
+<!-- Card 1: Consistency Score -->
+<div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-[#F1F5F9] p-6 flex flex-col justify-between">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-tighter mb-4">Consistency Score</p>
+<div class="flex items-center justify-between">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-low" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary-container" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="49.2" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-bold text-body-md text-on-surface">72%</span>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-sm text-label-sm text-on-surface-variant">Goal: 80%</p>
+<p class="font-label-sm text-[10px] text-primary uppercase font-bold mt-1">Keep pushing!</p>
+</div>
+</div>
+</div>
+<!-- Card 2: Days Studied This Month -->
+<div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-[#F1F5F9] p-6">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-tighter mb-4">Days Studied (Dec)</p>
+<div class="flex items-end justify-between mb-3">
+<span class="font-title-md text-title-md text-on-surface">18 / 30 Days</span>
+</div>
+<div class="w-full bg-surface-container-low h-2 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<!-- Card 3: Days Missed This Month -->
+<div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-[#F1F5F9] p-6 border-l-4 border-l-error/30">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-tighter mb-4">Days Missed (Dec)</p>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-error-container/20 rounded-lg">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">event_busy</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">5 Days Missed</p>
+<p class="text-[10px] text-error font-bold uppercase">Critical Limit: 7</p>
+</div>
+</div>
+</div>
+<!-- Card 4: Longest Streak -->
+<div class="bg-white rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-[#F1F5F9] p-6">
+<p class="font-label-sm text-label-sm text-outline uppercase tracking-tighter mb-4">Longest Streak</p>
+<div class="flex items-center gap-3">
+<div class="p-2 bg-tertiary-fixed/30 rounded-lg">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+</div>
+<div>
+<p class="font-title-md text-title-md text-on-surface">24 Days</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Personal Best</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<footer class="bg-surface-bright border-t border-outline-variant mt-section-margin">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-container-padding py-8 max-w-[1280px] mx-auto gap-4">
+<div class="flex flex-col gap-1">
+<span class="font-title-md text-title-md text-primary font-bold">DSA Compass</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant">© 2024 DSA Compass. Built for focused Java DSA practice.</p>
+</div>
+<div class="flex gap-6">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+<script>
+    // Generate Heatmap Grid
+    const grid = document.getElementById('heatmap-container');
+    const totalSquares = 12 * 7;
+
+    // Classes matching the new legend requirements
+    const squareTypes = ['square-none', 'square-studied', 'square-focus', 'square-revision'];
+
+    for (let i = 0; i < totalSquares; i++) {
+        const square = document.createElement('div');
+
+        // Pseudo-random data generation for visualization
+        let type;
+        const rand = Math.random();
+        if (rand < 0.3) type = 'square-none';
+        else if (rand < 0.6) type = 'square-studied';
+        else if (rand < 0.85) type = 'square-focus';
+        else type = 'square-revision';
+
+        square.className = `grid-square ${type} transition-transform duration-200 hover:scale-125 cursor-help`;
+        square.title = `Activity on day ${i+1}`;
+        grid.appendChild(square);
+    }
+
+    // Hover effect for cards
+    document.querySelectorAll('.rounded-xl').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transform = 'translateY(-2px)';
+            card.style.transition = 'all 0.3s ease';
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'translateY(0px)';
+        });
+    });
+</script>
+</body></html>

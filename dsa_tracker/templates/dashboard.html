@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Dashboard · DSA Compass{% endblock %}
+
 {% block content %}
 <section class="hero-panel mb-4">
     <div>
         <span class="eyebrow">JAVA DSA ROADMAP</span>
-        <h1>Good to see you, {{current_user.name}}.</h1>
+        <h1>Good to see you, {{ current_user.name }}.</h1>
         <p>{{ quote }}</p>
     </div>
     <div class="hero-progress">
         <div class="progress-ring" style="--progress: {{ overall_progress * 3.6 }}deg">
-            <div><strong>{{ overall_progress }}%</strong><span>complete</span></div>
+            <div>
+                <strong>{{ overall_progress }}%</strong>
+                <span>complete</span>
+            </div>
         </div>
     </div>
 </section>
@@ -29,7 +33,7 @@
     </div>
     <div class="col-6 col-xl-3">
         <div class="metric-card">
-            <span class="metric-label">Current streak</span>
+            <span class="metric-label text-xl">Current streak 🔥</span>
             <strong>{{ current_streak }}<small> days</small></strong>
         </div>
     </div>
@@ -41,6 +45,9 @@
     </div>
 </section>
 
+{% include "partials/consistency_calendar.html" %}
+{% include "partials/_consistency_stats.html" %}
+
 <div class="row g-4">
     <div class="col-lg-7">
         <section class="content-card h-100">
@@ -51,6 +58,7 @@
                 </div>
                 <a href="{{ url_for('main.curriculum') }}" class="text-link">View curriculum →</a>
             </div>
+
             <div class="section-list">
                 {% for section in sections %}
                     <a class="section-progress-row" href="{{ url_for('main.curriculum', section=section.id) }}">
@@ -66,6 +74,7 @@
             </div>
         </section>
     </div>
+
     <div class="col-lg-5">
         <section class="content-card mb-4">
             <span class="eyebrow">TODAY</span>
@@ -84,6 +93,7 @@
                 <a href="{{ url_for('main.focus') }}" class="btn btn-primary w-100">Choose today’s focus</a>
             {% endif %}
         </section>
+
         <section class="content-card">
             <div class="section-heading">
                 <div>
@@ -109,3 +119,8 @@
 </div>
 {% endblock %}
 
+{% block head %}
+<script>
+    window.heatmapData = {{ heatmap_data | tojson }};
+</script>
+{% endblock %}

@@ -2,17 +2,18 @@ from .models import Section, Topic, db
 
 
 CURRICULUM = [
-    (
-        "Java Refresher",
-        "Refresh the Java foundations needed for solving DSA problems.",
-        [
-            "Refresher: 1D Arrays",
-            "Refresher: 2D Arrays",
-            "Refresher: ArrayLists",
-            "Refresher: Strings",
-            "Refresher: HashMap & HashSet",
-        ],
-    ),
+( "Programming Fundamentals", "Build the core programming concepts required before starting Data Structures & Algorithms. These concepts are language-independent and can be learned using Java, Python, C++, C#, JavaScript, or any modern programming language.",
+  [ "Variables, Data Types & Input/Output",
+    "Operators & Expressions",
+    "Conditional Statements (Decision Making)",
+    "Loops & Iteration", "Functions & Modular Programming",
+    "Time Complexity Basics (Introduction to Big-O)",
+    "Arrays (1D & 2D)",
+    "Dynamic Arrays / Lists",
+    "Strings",
+    "Hash Maps / Dictionaries (Basic Usage)"
+    ],
+  ),
     (
         "Intermediate DSA",
         "Build problem-solving fundamentals and core data structure techniques.",

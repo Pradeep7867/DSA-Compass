@@ -5,29 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A focused Java DSA learning tracker">
     <title>{% block title %}DSA Compass{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: consolidated into two requests -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Hanken+Grotesk:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+
+    <!-- App Stylesheets -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/consistency-calendar.css') }}">
+
+    <!-- Optional per-page head content -->
+    {% block head %}{% endblock %}
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark app-navbar sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">
-                <span class="brand-mark">D</span>
+                <span class="material-symbols-outlined text-primary-fixed-dim">explore</span>
                 <span>DSA Compass</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="mainNav">
                 <div class="navbar-nav ms-auto gap-lg-2">
                     <a class="nav-link {{ 'active' if request.endpoint == 'main.dashboard' }}" href="{{ url_for('main.dashboard') }}">Dashboard</a>
                     <a class="nav-link {{ 'active' if request.endpoint == 'main.curriculum' }}" href="{{ url_for('main.curriculum') }}">Curriculum</a>
-                    <a class="nav-link {{ 'active' if request.endpoint == 'main.focus' }}" href="{{ url_for('main.focus') }}">Today’s Focus</a>
+                    <a class="nav-link {{ 'active' if request.endpoint == 'main.focus' }}" href="{{ url_for('main.focus') }}">Today's Focus</a>
                     <a class="nav-link {{ 'active' if request.endpoint == 'main.revisions' }}" href="{{ url_for('main.revisions') }}">Revisions</a>
-                    <a class="nav-link {{ 'active' if request.endpoint == 'main.revisions' }}" href="{{ url_for('main.logout') }}">logout</a>
+                    <a class="nav-link" href="{{ url_for('main.logout') }}">Logout</a>
                 </div>
             </div>
         </div>
@@ -38,39 +50,34 @@
             {% for category, message in messages %}
                 <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm auto-dismiss-alert" role="alert">
                     {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             {% endfor %}
         {% endwith %}
+
         {% block content %}{% endblock %}
     </main>
-
 
     <footer class="container pb-4 text-center text-secondary small">
         Built for focused Java DSA practice.
     </footer>
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
 
-setTimeout(function () {
+    <!-- Auto-dismiss flash alerts after 3 seconds -->
+    <script>
+        setTimeout(function () {
+            document.querySelectorAll(".auto-dismiss-alert").forEach(function (alertElement) {
+                bootstrap.Alert.getOrCreateInstance(alertElement).close();
+            });
+        }, 3000);
+    </script>
 
-    document
-        .querySelectorAll(".auto-dismiss-alert")
-        .forEach(function(alertElement) {
+    <!-- Consistency Calendar JS -->
+    <script src="{{ url_for('static', filename='js/consistency-calendar.js') }}"></script>
 
-            const alert =
-                bootstrap.Alert.getOrCreateInstance(
-                    alertElement
-                );
-
-            alert.close();
-
-        });
-
-}, 3000);
-
-</script>
-
+    <!-- Optional per-page scripts -->
+    {% block scripts %}{% endblock %}
 </body>
 </html>
-

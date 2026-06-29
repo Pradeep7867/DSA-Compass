@@ -1,7 +1,9 @@
+import calendar
 from datetime import UTC, date, datetime
 
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from sqlalchemy import func
+from datetime import date, timedelta
 from .models import FocusEntry, Revision, Section, Topic, UserTopicProgress ,db
 from .models import (
     FocusEntry,
@@ -172,7 +174,7 @@ def login():
     return render_template(
         "login.html"
     )
-
+#Dashboard Route --------------------------------------
 @main.get("/")
 @login_required
 def dashboard():
@@ -272,13 +274,83 @@ def dashboard():
         .all()
     }
 
-    current_streak = calculate_streak(
-        studied_dates
+    # ── Heatmap Data ────────────────────────────────────────────
+    # All focus entries for this user
+    calendar_entries = FocusEntry.query.filter_by(
+        user_id=current_user.id
+    ).all()
+
+    # lookup: date string -> {studied, focus_met}
+    calendar_lookup = {}
+    for entry in calendar_entries:
+        iso = entry.focus_date.isoformat()
+        calendar_lookup[iso] = {
+            "studied": entry.studied,
+            "focus_met": entry.studied and entry.topic_id is not None
+        }
+
+    # lookup: revision completed dates
+    revision_dates = {
+        r.completed_at.date().isoformat()
+        for r in Revision.query.filter_by(
+            user_id=current_user.id,
+            completed=True
+        ).all()
+        if r.completed_at
+    }
+
+    # Build heatmap from Jan 1 of current year → today (GitHub style)
+    start_date = date(date.today().year, 1, 1)
+    heatmap_data = []
+    current_date = start_date
+
+    while current_date <= date.today():
+        iso = current_date.isoformat()
+        entry = calendar_lookup.get(iso, {})
+        heatmap_data.append({
+            "date": iso,
+            "studied": entry.get("studied", False),
+            "focus_met": entry.get("focus_met", False),
+            "revision": iso in revision_dates,
+        })
+        current_date += timedelta(days=1)
+
+    # ── Streak / Stats ───────────────────────────────────────────
+    studied_dates = {
+        row[0]
+        for row in db.session.query(FocusEntry.focus_date)
+        .filter(
+            FocusEntry.user_id == current_user.id,
+            FocusEntry.studied.is_(True)
+        )
+        .all()
+    }
+
+    studied_days = sum(day["studied"] for day in heatmap_data)
+    consistency_score = round((studied_days / len(heatmap_data)) * 100)
+    current_streak = calculate_streak(studied_dates)
+    longest_streak = calculate_longest_streak(studied_dates)
+
+    today = date.today()
+    days_studied_this_month = sum(
+        entry.studied
+        for entry in calendar_entries
+        if entry.focus_date.month == today.month
+        and entry.focus_date.year == today.year
     )
+    days_elapsed_this_month = today.day
+    days_missed_this_month = days_elapsed_this_month - days_studied_this_month
+
+    now = datetime.now()
+    hours_left_today = 23 - now.hour
 
     quote = get_quote(
         date.today().toordinal()
     )
+    days_in_current_month = calendar.monthrange(
+        today.year,
+        today.month
+    )[1]
 
     return render_template(
         "dashboard.html",
@@ -292,6 +364,14 @@ def dashboard():
         pending_revisions=pending_revisions,
         current_streak=current_streak,
         quote=quote,
+        heatmap_data=heatmap_data,
+        consistency_score=consistency_score,
+        longest_streak = longest_streak,
+        days_studied_this_month = days_studied_this_month,
+        days_missed_this_month = days_missed_this_month,
+        hours_left_today = hours_left_today,
+        days_in_current_month=days_in_current_month,
+
     )
 
 
@@ -605,6 +685,33 @@ def calculate_streak(studied_dates):
         cursor = date.fromordinal(cursor.toordinal() - 1)
     return streak
 
+def calculate_longest_streak(studied_dates):
+
+    if not studied_dates:
+        return 0
+
+    sorted_dates = sorted(studied_dates)
+
+    longest = 1
+    current = 1
+
+    for i in range(1, len(sorted_dates)):
+
+        if (
+            sorted_dates[i]
+            - sorted_dates[i - 1]
+        ).days == 1:
+
+            current += 1
+            longest = max(
+                longest,
+                current
+            )
+
+        else:
+            current = 1
+
+    return longest
 
 def get_quote(seed):
     quotes = [
@@ -630,9 +737,6 @@ def logout():
     return redirect(
         url_for("main.login")
     )
-@main.get("/debug-progress")
-def debug_progress():
-
-    count = UserTopicProgress.query.count()
-
-    return f"Progress Rows: {count}"
+@main.get("/boiler")
+def boiler():
+    return render_template("boiler.html")

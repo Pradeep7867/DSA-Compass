@@ -170,3 +170,200 @@ h2 { font-size: 1.25rem; font-weight: 700; }
     .topic-info { align-items: flex-start; flex-direction: column; gap: .35rem; }
 }
 
+/* ===========================
+   CONSISTENCY CALENDAR
+=========================== */
+
+.consistency-card{
+
+    padding:30px;
+    margin-bottom : 36px;
+
+}
+
+.consistency-header{
+
+    margin-bottom:18px;
+
+}
+
+.streak-fire{
+
+    font-size:28px;
+
+}
+
+.streak-timer{
+
+    color:#dc3545;
+    font-weight:700;
+    font-size:14px;
+
+}
+
+.calendar-title{
+
+    font-size:2rem;
+    font-weight:700;
+    color:#0f172a;
+
+}
+
+.calendar-subtitle{
+
+    color:#64748b;
+    margin-top:6px;
+
+}
+
+/* ---------- Legend ---------- */
+
+.heatmap-legend{
+
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    align-items:center;
+    padding : 24px 28px;
+
+}
+
+.legend-item{
+
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    font-size:12px;
+
+    color:#475569;
+
+}
+
+.legend-box{
+
+    width:11px;
+    height:11px;
+
+    border-radius:2px;
+
+}
+
+.legend-box.none{
+
+    background:#E5E7EB;
+
+}
+
+.legend-box.studied{
+
+    background:#93C5FD;
+
+}
+
+.legend-box.focus{
+
+    background:#3157E6;
+
+}
+
+.legend-box.revision{
+
+    background:#10B981;
+
+}
+
+/* ---------- Heatmap ---------- */
+
+.heatmap-scroll{
+
+    overflow-x:auto;
+    padding-bottom:10px;
+
+}
+
+.heatmap-layout{
+
+    display:flex;
+
+    gap:14px;
+
+    align-items:flex-start;
+
+    min-width:780px;
+
+}
+
+.day-labels{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    height:96px;
+
+    font-size:11px;
+
+    color:#64748b;
+
+    font-weight:600;
+
+}
+
+.heatmap-grid{
+
+    display:flex;
+
+    gap:3px;
+
+}
+
+.week-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:3px;
+
+}
+
+.heatmap-cell{
+
+    width:11px;
+
+    height:11px;
+
+    border-radius:2px;
+
+    background:#E5E7EB;
+
+    transition:.25s;
+
+}
+
+.heatmap-cell:hover{
+
+    transform:scale(1.15);
+
+}
+
+.heatmap-cell.studied{
+
+    background:#93C5FD;
+
+}
+
+.heatmap-cell.focus{
+
+    background:#3157E6;
+
+}
+
+.heatmap-cell.revision{
+
+    background:#10B981;
+
+}
